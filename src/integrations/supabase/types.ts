@@ -14,16 +14,261 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      businesses: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          design_preferences: string | null
+          id: string
+          instagram: string | null
+          menu_notes: string | null
+          name: string
+          owner_id: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description?: string | null
+          design_preferences?: string | null
+          id?: string
+          instagram?: string | null
+          menu_notes?: string | null
+          name: string
+          owner_id: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          design_preferences?: string | null
+          id?: string
+          instagram?: string | null
+          menu_notes?: string | null
+          name?: string
+          owner_id?: string
+        }
+        Relationships: []
+      }
+      content_requests: {
+        Row: {
+          business_id: string
+          created_at: string
+          id: string
+          message: string
+          project_id: string
+          status: string
+        }
+        Insert: {
+          business_id: string
+          created_at?: string
+          id?: string
+          message: string
+          project_id: string
+          status?: string
+        }
+        Update: {
+          business_id?: string
+          created_at?: string
+          id?: string
+          message?: string
+          project_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_requests_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_requests_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      match_requests: {
+        Row: {
+          business_id: string
+          created_at: string
+          id: string
+          status: string
+          student_id: string
+        }
+        Insert: {
+          business_id: string
+          created_at?: string
+          id?: string
+          status?: string
+          student_id: string
+        }
+        Update: {
+          business_id?: string
+          created_at?: string
+          id?: string
+          status?: string
+          student_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "match_requests_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+        }
+        Relationships: []
+      }
+      projects: {
+        Row: {
+          admin_feedback: string | null
+          business_id: string
+          created_at: string
+          id: string
+          live_url: string | null
+          stage: Database["public"]["Enums"]["project_stage"]
+          staging_link: string | null
+          stipend_paid: boolean
+          student_id: string | null
+          subscription_active: boolean
+          updated_at: string
+        }
+        Insert: {
+          admin_feedback?: string | null
+          business_id: string
+          created_at?: string
+          id?: string
+          live_url?: string | null
+          stage?: Database["public"]["Enums"]["project_stage"]
+          staging_link?: string | null
+          stipend_paid?: boolean
+          student_id?: string | null
+          subscription_active?: boolean
+          updated_at?: string
+        }
+        Update: {
+          admin_feedback?: string | null
+          business_id?: string
+          created_at?: string
+          id?: string
+          live_url?: string | null
+          stage?: Database["public"]["Enums"]["project_stage"]
+          staging_link?: string | null
+          stipend_paid?: boolean
+          student_id?: string | null
+          subscription_active?: boolean
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "projects_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      student_profiles: {
+        Row: {
+          available: boolean
+          bio: string | null
+          course: string | null
+          created_at: string
+          id: string
+          skills: string | null
+          university: string | null
+          user_id: string
+        }
+        Insert: {
+          available?: boolean
+          bio?: string | null
+          course?: string | null
+          created_at?: string
+          id?: string
+          skills?: string | null
+          university?: string | null
+          user_id: string
+        }
+        Update: {
+          available?: boolean
+          bio?: string | null
+          course?: string | null
+          created_at?: string
+          id?: string
+          skills?: string | null
+          university?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      current_user_role: {
+        Args: never
+        Returns: Database["public"]["Enums"]["app_role"]
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "shopkeeper" | "student" | "admin"
+      project_stage: "matched" | "design" | "qa" | "live"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +395,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["shopkeeper", "student", "admin"],
+      project_stage: ["matched", "design", "qa", "live"],
+    },
   },
 } as const
